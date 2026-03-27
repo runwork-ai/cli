@@ -35,7 +35,7 @@ ARCHIVE="${TARGET}.tar.gz"
 
 # Get latest version
 echo "Fetching latest Runwork CLI version..."
-VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" | grep -o '"tag_name":[[:space:]]*"[^"]*"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
 
 if [ -z "$VERSION" ]; then
   echo "Error: Could not determine latest version."
