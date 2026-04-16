@@ -6,7 +6,9 @@ The CLI for [Runwork](https://www.runwork.ai): develop, preview, and deploy Runw
 
 Runwork makes teams AI-native. It connects your team's AI tools (Claude, Cursor, Codex, Windsurf, and more) to one shared workspace with skills, integrations, workflows, apps, data, and infrastructure. What one person creates becomes available to every teammate's AI tools. Your team's AI capability compounds instead of staying siloed.
 
-This CLI is the local development and workspace management interface:
+**For most team members, the recommended way to get started is the [Runwork Desktop app](https://github.com/runwork-ai/desktop).** It handles onboarding, detects and connects your AI tools, and keeps everything in sync automatically. Install via Homebrew (`brew install --cask runwork-ai/tap/runwork-desktop`) or download from [GitHub Releases](https://github.com/runwork-ai/desktop/releases).
+
+The CLI is the power-user and developer interface for building apps, managing workspace configuration, and deploying to production:
 
 - **Full-stack apps, zero infrastructure.** Data storage, file hosting, background jobs, durable workflows, AI, and 3,200+ third-party integrations are built into the platform. You write application code; Runwork runs it.
 - **Zero to app in seconds.** Describe what you need and Runwork generates it. Developers customize with code using the [`@runworkai/framework`](https://www.npmjs.com/package/@runworkai/framework).
@@ -131,16 +133,6 @@ my-app/
     components/          # UI components
   shared/types.ts        # Shared types between frontend and backend
 ```
-
-## Desktop App
-
-For teams, the [Runwork Desktop app](https://github.com/runwork-ai/desktop) handles onboarding, continuous workspace sync, and AI tool management in the background. Install via Homebrew:
-
-```bash
-brew install --cask runwork-ai/tap/runwork-desktop
-```
-
-Or download directly from [GitHub Releases](https://github.com/runwork-ai/desktop/releases).
 
 ## Community
 
