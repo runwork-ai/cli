@@ -1,23 +1,20 @@
 # runwork
 
-The CLI for [Runwork](https://www.runwork.ai): develop, preview, and deploy Runwork apps from your local machine using any editor or AI coding tool.
+The CLI for [Runwork](https://www.runwork.ai) -- develop, preview, and deploy Runwork apps from your local machine using any editor or AI coding tool.
 
 ## The Runwork Platform
 
-Runwork makes teams AI-native. It connects your team's AI tools (Claude, Cursor, Codex, Windsurf, and more) to one shared workspace with skills, integrations, workflows, apps, data, and infrastructure. What one person creates becomes available to every teammate's AI tools. Your team's AI capability compounds instead of staying siloed.
+Runwork is an AI workspace that brings AI agents, custom apps, and human teams into one place. Teams talk to the workspace to get quick answers, automate recurring work, or spin up full custom tools -- without switching between dozens of SaaS products.
 
-**For most team members, the recommended way to get started is the [Runwork Desktop app](https://github.com/runwork-ai/desktop).** It handles onboarding, detects and connects your AI tools, and keeps everything in sync automatically. Install via Homebrew (`brew install --cask runwork-ai/tap/runwork-desktop`) or download from [GitHub Releases](https://github.com/runwork-ai/desktop/releases).
+This CLI is the local development interface to the platform. You write TypeScript, and the platform handles deployment, infrastructure, AI, and integrations:
 
-The CLI is the power-user and developer interface for building apps, managing workspace configuration, and deploying to production:
-
-- **Full-stack apps, zero infrastructure.** Data storage, file hosting, background jobs, durable workflows, AI, and 3,200+ third-party integrations are built into the platform. You write application code; Runwork runs it.
-- **Zero to app in seconds.** Describe what you need and Runwork generates it. Developers customize with code using the [`@runworkai/framework`](https://www.npmjs.com/package/@runworkai/framework).
-- **Instant deployments.** Push code and get a live URL. Preview environments while you develop, production at the edge.
-- **Built-in AI agents.** Conversational agents that read data, take actions, and coordinate across apps. No API keys or model configuration to manage.
-- **Connected apps.** Apps in a workspace share entities, call each other's APIs, communicate through channels, and present a unified experience.
-- **Every app is an MCP server and a skill.** Deploy an app, and it automatically becomes an MCP server and a callable skill. Your AI tools and workspace agents can use your apps directly, completing the loop from development to AI consumption.
-- **AI-native local development.** Every scaffolded project includes `CLAUDE.md`, `AGENTS.md`, and full framework type definitions in `.runwork/types/`. AI coding tools (Claude Code, Cursor, Codex, or any editor) understand the Runwork framework out of the box. The CLI keeps code and preview in sync while you or your AI agent write code.
-- **Team workspace sync.** `runwork sync` and `runwork setup` keep your local AI tools connected to the shared workspace. Skills, MCP servers, team instructions, and integrations flow to every connected agent.
+- **Full-stack apps, zero infrastructure** -- Data storage, file hosting, background jobs, durable workflows, AI, and 3,200+ third-party integrations are all built into the platform. You write application code; Runwork runs it.
+- **Zero to app in seconds** -- Describe what you need and Runwork generates it. Developers customize with code using the [`@runworkai/framework`](https://www.npmjs.com/package/@runworkai/framework).
+- **Instant deployments** -- Push code and get a live URL. Preview environments while you develop, production at the edge.
+- **Built-in AI agents** -- Conversational agents that read data, take actions, and coordinate across apps. No API keys or model configuration to manage.
+- **Connected apps** -- Apps in a workspace share entities, call each other's APIs, communicate through channels, and present a unified experience.
+- **Every app is an MCP server and a skill** -- Deploy an app, and it automatically becomes an MCP server and a callable skill. Your AI tools and workspace agents can use your apps directly -- completing the loop from development to AI consumption.
+- **AI-native local development** -- Every scaffolded project includes `CLAUDE.md`, `AGENTS.md`, and full framework type definitions in `.runwork/types/`. AI coding tools (Claude Code, Cursor, Codex, or any editor) understand the Runwork framework out of the box -- no setup, no guessing. The CLI keeps code and preview in sync while you or your AI agent write code.
 
 ## Install
 
@@ -26,8 +23,6 @@ The CLI is the power-user and developer interface for building apps, managing wo
 ```bash
 curl -fsSL https://runwork.ai/install.sh | sh
 ```
-
-All macOS binaries are signed with Apple Developer ID and notarized.
 
 ### macOS (Homebrew)
 
@@ -48,7 +43,7 @@ Download from [GitHub Releases](https://github.com/runwork-ai/cli/releases).
 ## Quick Start
 
 ```bash
-runwork login          # Authenticate with your workspace
+runwork login          # Authenticate with Runwork
 runwork init           # Create a new app
 runwork dev            # Start developing with live preview
 ```
@@ -58,12 +53,10 @@ runwork dev            # Start developing with live preview
 | Command | Description |
 |---------|-------------|
 | `runwork login` | Authenticate with the Runwork platform via browser OAuth |
-| `runwork init` | Create a new app: prompts for name and workspace, scaffolds the project |
+| `runwork init` | Create a new app -- prompts for name and workspace, scaffolds the project |
 | `runwork clone` | Clone an existing Runwork app to your machine |
 | `runwork dev` | Start local development with live preview and auto-sync |
 | `runwork deploy` | Deploy to production |
-| `runwork sync` | Sync workspace configuration across your AI tools |
-| `runwork setup` | Configure AI tool integrations (MCP servers, skills, team instructions) |
 | `runwork logout` | Remove stored credentials |
 
 ### `runwork dev`
@@ -79,37 +72,28 @@ The main development command. When you run `runwork dev`:
 
 Edit files in your editor, and changes appear in the preview automatically.
 
-### `runwork sync`
-
-Keeps your local AI tool configurations in sync with your team's shared workspace. Skills, MCP server connections, team instructions, and workspace settings flow from the cloud to your local machine. Run it once after setup, or let the Desktop app handle it continuously in the background.
-
-### `runwork setup`
-
-Interactive setup that detects your installed AI tools and connects them to the Runwork workspace. Configures MCP servers, installs skills, and applies team instructions so your AI tools have full access to the shared workspace from the start.
-
 ## How It Works
 
 Runwork apps are full-stack TypeScript projects built with the [`@runworkai/framework`](https://www.npmjs.com/package/@runworkai/framework). The CLI handles the development lifecycle:
 
-- **Git-based sync.** Your app is backed by a git repository on the Runwork platform. The CLI uses git push/pull to sync code between your machine and the cloud.
-- **Cloud preview.** `runwork dev` spins up a live preview sandbox. Changes sync automatically as you edit files.
-- **Framework types.** The CLI populates `.runwork/types/` with framework type definitions so AI coding tools can understand the full API without needing `node_modules`.
-- **Zero config.** Project settings live in `.runwork.json`. No deployment scripts to manage locally.
-- **Team-aware.** Everything you create in the workspace (apps, skills, workflows, integrations) is accessible to every team member's AI tools through the shared workspace layer.
+- **Git-based sync** -- Your app is backed by a git repository on the Runwork platform. The CLI uses git push/pull to sync code between your machine and the cloud.
+- **Cloud preview** -- `runwork dev` spins up a live preview sandbox. Changes sync automatically as you edit files.
+- **Framework types** -- The CLI populates `.runwork/types/` with framework type definitions so AI coding tools can understand the full API without needing `node_modules`.
+- **Zero config** -- Project settings live in `.runwork.json`. No deployment scripts to manage locally.
 
 ## What You Can Build
 
 Every Runwork app gets built-in access to:
 
-- **Data storage.** Persistent entities with search, sort, filter, and pagination
-- **AI agents.** Conversational agents with tool use, memory, and integration access
-- **Backend AI.** `generateText`, `generateObject`, `streamText` for routes, workflows, and jobs
-- **Durable workflows.** Multi-step processes that survive failures, with retries and event waiting
-- **Scheduled jobs.** Cron-based background tasks
-- **File storage.** Upload and manage files and media
-- **Public endpoints.** Authenticated APIs for external consumers
-- **Cross-app workspaces.** Shared entities, channels, and notifications between apps
-- **3,200+ integrations.** OAuth-managed connections to third-party services
+- **Data storage** -- Persistent entities with search, sort, filter, and pagination
+- **AI agents** -- Conversational agents with tool use, memory, and integration access
+- **Backend AI** -- `generateText`, `generateObject`, `streamText` for routes, workflows, and jobs
+- **Durable workflows** -- Multi-step processes that survive failures, with retries and event waiting
+- **Scheduled jobs** -- Cron-based background tasks
+- **File storage** -- Upload and manage files and media
+- **Public endpoints** -- Authenticated APIs for external consumers
+- **Cross-app workspaces** -- Shared entities, channels, and notifications between apps
+- **3,200+ integrations** -- OAuth-managed connections to third-party services
 
 ## Project Structure
 
@@ -134,13 +118,6 @@ my-app/
   shared/types.ts        # Shared types between frontend and backend
 ```
 
-## Community
-
-- 90,000+ community skills and processes
-- 11,000+ MCP tool connectors
-- 8,000+ workflow recipes
-- 3,200+ integrations
-
 ## Requirements
 
 - Git
@@ -150,9 +127,7 @@ my-app/
 ## Links
 
 - [Runwork Platform](https://www.runwork.ai)
-- [Runwork Desktop](https://github.com/runwork-ai/desktop)
-- [Homebrew Tap](https://github.com/runwork-ai/homebrew-tap)
-- [`@runworkai/framework`](https://www.npmjs.com/package/@runworkai/framework) on npm
+- [`@runworkai/framework`](https://www.npmjs.com/package/@runworkai/framework) -- The TypeScript framework for building Runwork apps
 
 ## License
 
