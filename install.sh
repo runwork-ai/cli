@@ -206,29 +206,58 @@ path_has() {
     esac
 }
 
-if [ "$link_created" = "1" ] && path_has "$BIN_LINK_DIR"; then
-    info ""
-    info "Get started:"
-    info "  runwork login"
-    info "  runwork init"
-elif [ "$link_created" = "1" ]; then
-    info ""
-    info "Symlinked at ${BIN_LINK}. Add its directory to PATH:"
-    info ""
-    info "  export PATH=\"${BIN_LINK_DIR}:\$PATH\""
-    info ""
-    info "Then run:"
-    info "  runwork login"
-    info "  runwork init"
-elif path_has "$INSTALL_DIR"; then
+# Persist ~/.runwork/bin on PATH across future shells, matching what Runwork
+# Desktop (src/lib/cli-resolver.ts) and the Windows installer (install.ps1)
+# already do. Idempotent: skips any profile already referencing .runwork/bin
+# (whether added here previously or by the desktop app). Only manages the
+# canonical install dir -- a custom RUNWORK_INSTALL_DIR means "I manage PATH".
+RUNWORK_PATH_WRITTEN=0
+persist_runwork_path() {
+    install_dir="$1"
+    if [ "$install_dir" != "$HOME/.runwork/bin" ]; then
+        return 0
+    fi
+
+    export_line='export PATH="$HOME/.runwork/bin:$PATH"'
+    marker="# Added by Runwork CLI installer"
+
+    # Primary profile for the user's login shell (always created if missing).
+    case "${SHELL:-}" in
+        *zsh)  primary="$HOME/.zshrc" ;;
+        *bash) primary="$HOME/.bashrc" ;;
+        *)     primary="$HOME/.profile" ;;
+    esac
+
+    for profile in "$primary" "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile"; do
+        # Non-primary profiles are only touched if they already exist.
+        if [ "$profile" != "$primary" ] && [ ! -f "$profile" ]; then
+            continue
+        fi
+        # Idempotent: never double-write if .runwork/bin is already referenced.
+        if [ -f "$profile" ] && grep -q '\.runwork/bin' "$profile" 2>/dev/null; then
+            continue
+        fi
+        printf '\n%s\n%s\n' "$marker" "$export_line" >> "$profile" 2>/dev/null \
+            && RUNWORK_PATH_WRITTEN=1 \
+            && info "Added ~/.runwork/bin to PATH in ${profile}"
+    done
+    return 0
+}
+
+persist_runwork_path "$INSTALL_DIR"
+
+if path_has "$INSTALL_DIR" || { [ "$link_created" = "1" ] && path_has "$BIN_LINK_DIR"; }; then
     info ""
     info "Get started:"
     info "  runwork login"
     info "  runwork init"
 else
     info ""
-    info "Could not create a symlink in a writable bin directory on PATH."
-    info "Add the install directory to PATH:"
+    if [ "$RUNWORK_PATH_WRITTEN" = "1" ]; then
+        info "Added ~/.runwork/bin to your PATH. Restart your shell, or run this for the current one:"
+    else
+        info "Add the install directory to PATH:"
+    fi
     info ""
     info "  export PATH=\"${INSTALL_DIR}:\$PATH\""
     info ""
