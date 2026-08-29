@@ -167,8 +167,13 @@ try {
     # Add install directory to user PATH if not already present.
     $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
     if (-not $userPath) { $userPath = '' }
+    # Entry-wise, case-insensitive, trailing-separator tolerant -- the same
+    # comparison the desktop makes (cli-resolver.ts). An exact -contains here
+    # could not recognise an entry the desktop had written, so the two writers
+    # appended duplicates of each other's paths.
     $pathEntries = @($userPath -split ';' | Where-Object { $_ -and $_.Trim() -ne '' })
-    $alreadyOnPath = $pathEntries -contains $installDir
+    $normalizedTarget = $installDir.TrimEnd('\').ToLower()
+    $alreadyOnPath = [bool]($pathEntries | Where-Object { $_.TrimEnd('\').ToLower() -eq $normalizedTarget })
 
     if (-not $alreadyOnPath) {
         $trimmedUserPath = $userPath.TrimEnd(';')
