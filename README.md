@@ -140,6 +140,20 @@ Runwork apps are full-stack TypeScript projects built with the [`@runworkai/fram
 - **Framework types** -- The CLI populates `.runwork/types/` with framework type definitions so AI coding tools can understand the full API without needing `node_modules`.
 - **Zero config** -- Project settings live in `.runwork.json`. No deployment scripts to manage locally.
 
+## What Leaves Your Machine
+
+When a conversation with an AI tool on this computer ends, the CLI sends one
+summary of it to your workspace, so the team can see that work happened. It
+carries counts and names, never content:
+
+- a hashed session id, when it started and ended, and the space it belongs to
+- message, tool call, MCP call and error counts, which tools, MCP servers,
+  skills and models were used, and token counts
+- the folder's name (never its full path) and hashes of the folder and repo
+
+It never carries the conversation's title, your prompts, the transcript, file
+contents or full paths. A conversation stays yours unless you share it.
+
 ## What You Can Build
 
 Every Runwork app gets built-in access to:
