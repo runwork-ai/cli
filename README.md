@@ -57,6 +57,7 @@ runwork dev            # Start developing with live preview
 | `runwork clone` | Clone an existing Runwork app to your machine |
 | `runwork dev` | Start local development with live preview and auto-sync |
 | `runwork deploy` | Deploy to production |
+| `runwork git <args>` | Run git in an app folder with Runwork's own git, signed in to the app's Runwork remote |
 | `runwork spaces` | Spaces: containers for one kind of work |
 | `runwork logout` | Remove stored credentials |
 
@@ -193,9 +194,10 @@ my-app/
 
 ## Requirements
 
-- Git
 - A [Runwork](https://www.runwork.ai) account
 - Node.js 18+ (only required when installing via npm)
+
+Git is not required: the CLI installs its own under `~/.runwork/git` the first time a command needs it.
 
 ## Links
 

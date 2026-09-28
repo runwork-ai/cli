@@ -246,6 +246,34 @@ persist_runwork_path() {
 
 persist_runwork_path "$INSTALL_DIR"
 
+# Runwork's own git, which `runwork dev` and `runwork deploy` build with.
+# Installed now so the first command does not wait for it, and never fatal:
+# that first command installs it too. Runs the binary just installed, not
+# whichever `runwork` comes first on PATH. `--background` because nobody
+# asked for git by name: RUNWORK_GIT=system means leave this machine on its
+# own git. stdin is closed because under `curl | sh` stdin is the rest of
+# this script.
+info ""
+info "Installing Runwork's git..."
+GIT_INSTALL_LOG="${TMP_DIR}/git-install.log"
+if "$BINARY_DST" git install --background --json </dev/null >"$GIT_INSTALL_LOG" 2>&1; then
+    git_path="$(sed -n 's/.*"kind":"done".*"path":"\([^"]*\)".*/\1/p' "$GIT_INSTALL_LOG" | tail -1)"
+    git_skipped="$(sed -n 's/.*"kind":"skipped".*"reason":"\([^"]*\)".*/\1/p' "$GIT_INSTALL_LOG" | tail -1)"
+    if [ -n "$git_path" ]; then
+        info "  Ready in ${git_path}"
+    elif [ -n "$git_skipped" ]; then
+        info "  Skipped: ${git_skipped}"
+    fi
+else
+    # The CLI's error line, else its last line of output (an older CLI
+    # without `runwork git` says "unknown command").
+    git_reason="$(sed -n 's/.*"kind":"error".*"message":"\([^"]*\)".*/\1/p' "$GIT_INSTALL_LOG" | tail -1)"
+    if [ -z "$git_reason" ]; then
+        git_reason="$(grep -v '^[[:space:]]*$' "$GIT_INSTALL_LOG" | tail -1)"
+    fi
+    info "  Could not install it now (${git_reason%.}). Runwork will try again when a command needs git."
+fi
+
 if path_has "$INSTALL_DIR" || { [ "$link_created" = "1" ] && path_has "$BIN_LINK_DIR"; }; then
     info ""
     info "Get started:"
