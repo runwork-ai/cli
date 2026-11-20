@@ -59,7 +59,18 @@ runwork dev            # Start developing with live preview
 | `runwork deploy` | Deploy to production |
 | `runwork git <args>` | Run git in an app folder with Runwork's own git, signed in to the app's Runwork remote |
 | `runwork spaces` | Spaces: containers for one kind of work |
+| `runwork whoami` | Show the signed-in account, how it signed in, the platform (flagged when not production) and the active workspace. Exits 1 when signed out or rejected. `--json` for scripts |
+| `runwork info` | App and workspace context as JSON, starting with the same `identity` block as `whoami` |
+| `runwork files` | Workspace file storage: `list` (buckets), `ls`, `download`, `upload` (infers Content-Type from the extension, `--content-type` overrides), `link`, `delete` |
 | `runwork logout` | Remove stored credentials |
+
+### `runwork files link`
+
+```bash
+runwork files link <bucket> <key> [--expires 10m|24h|7d|<seconds>] [--workspace <name-or-id>] [--json]
+```
+
+Prints a read link for a file in a workspace file storage bucket. The default is 1 hour and the maximum 7 days. Anyone with the link can open the file until it expires. `--json` gives `{url, expiresAt, bucket, key}`. Files in a space are not reachable this way.
 
 ### `runwork dev`
 
