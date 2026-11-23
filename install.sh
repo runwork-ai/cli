@@ -171,7 +171,14 @@ if [ -z "$BINARY_SRC" ]; then
 fi
 
 INSTALL_DIR="${RUNWORK_INSTALL_DIR:-$HOME/.runwork/bin}"
-mkdir -p "$INSTALL_DIR"
+# ~/.runwork holds the credentials, so what we create under it is owner only
+# (0700), as the CLI and the desktop do. umask only affects directories mkdir
+# creates: an existing one keeps its mode (`runwork doctor` reports it), and a
+# custom RUNWORK_INSTALL_DIR outside ~/.runwork is left to the umask.
+case "$INSTALL_DIR" in
+    "$HOME/.runwork"|"$HOME/.runwork/"*) (umask 077 && mkdir -p "$INSTALL_DIR") ;;
+    *) mkdir -p "$INSTALL_DIR" ;;
+esac
 if [ ! -w "$INSTALL_DIR" ]; then
     err "install directory is not writable: ${INSTALL_DIR}"
     err "Set RUNWORK_INSTALL_DIR to a directory you can write to."
